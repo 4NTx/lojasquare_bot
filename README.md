@@ -46,7 +46,6 @@ Este projeto é um bot de Discord simplessississsissssssiimo para notificação 
 3. **Configure o arquivo `config.yml`**
 
       <summary>Edite o arquivo `config.yml` com suas configurações:</summary>
-   <details>
 ```yaml
       # config.yml
 
@@ -121,7 +120,6 @@ Este projeto é um bot de Discord simplessississsissssssiimo para notificação 
    usar: true
    texto: "Notificação gerada automaticamente"
    icone_url: "URL_DO_ICONE_DO_FOOTER"
-</details>
 
    # Configuração do tempo de busca
 
