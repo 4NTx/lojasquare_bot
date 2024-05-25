@@ -45,7 +45,7 @@ Este projeto é um bot de Discord simplessississsissssssiimo para notificação 
 
 3. **Configure o arquivo `config.yml`**
 
-      <summary>Edite o arquivo `config.yml` com suas configurações:</summary>
+Edite o arquivo `config.yml` com suas configurações:
 ```yaml
       # config.yml
 
