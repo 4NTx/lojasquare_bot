@@ -1,0 +1,74 @@
+# Configuração básica para leigos
+
+# Configuração do tempo de busca
+tempo_busca:
+  intervalo_segundos: 60
+
+# Configurações do Discord
+discord:
+  token: "SEU_DISCORD_TOKEN_AQUI"
+  channel_id: "SEU_DISCORD_CHANNEL_ID_AQUI"
+
+# Configurações da API LojaSquare
+lojasquare:
+  api_secret: "SEU_LOJASQUARE_API_SECRET_AQUI"
+
+# Configurações do Banco de Dados
+database:
+  host: "123.456:3306"
+  user: "root"
+  password: "password"
+  name: "lojasquare"
+
+# Mensagens e Embeds
+mensagens:
+  # Mensagens de notificação de entrega
+  notificacao_entrega:
+    titulo_sucesso: "Entrega Realizada com Sucesso!"
+    titulo_multiplas: "Entregas Realizadas com Sucesso!"
+    campos:
+      produto:
+        nome: "Produto"
+        inline: true
+        desconhecido: "Desconhecido"
+        mostrar: true
+      quantidade:
+        nome: "Quantidade"
+        inline: true
+        desconhecido: "0"
+        mostrar: true
+      player:
+        nome: "Player"
+        inline: true
+        desconhecido: "Desconhecido"
+        mostrar: true
+      servidor:
+        nome: "Servidor"
+        inline: true
+        desconhecido: "Desconhecido"
+        mostrar: true
+      subservidor:
+        nome: "SubServidor"
+        inline: true
+        desconhecido: "Desconhecido"
+        mostrar: true
+      codigo:
+        nome: "Código"
+        inline: true
+        desconhecido: "Desconhecido"
+        mostrar: true
+      status:
+        nome: "Status"
+        inline: true
+        desconhecido: "Desconhecido"
+        mostrar: true
+      atualizado_em:
+        nome: "Atualizado Em"
+        inline: true
+        desconhecido: "Desconhecido"
+        mostrar: true
+    cor: "Green"
+    footer:
+      usar: false
+      texto: "Notificação gerada automaticamente"
+      icone_url: "URL_DO_ICONE_DO_FOOTER"
