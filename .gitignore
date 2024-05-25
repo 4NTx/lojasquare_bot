@@ -19,6 +19,9 @@ public/css/main.css
 # Coverage reports
 coverage
 
+#salvar
+salvar.yml
+
 # API keys and secrets
 .env
 
