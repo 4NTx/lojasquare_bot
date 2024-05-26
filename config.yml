@@ -1,74 +1,158 @@
-# Configuração básica para leigos
-
-# Configuração do tempo de busca
-tempo_busca:
-  intervalo_segundos: 60
-
-# Configurações do Discord
-discord:
-  token: "SEU_DISCORD_TOKEN_AQUI"
-  channel_id: "SEU_DISCORD_CHANNEL_ID_AQUI"
-
-# Configurações da API LojaSquare
-lojasquare:
-  api_secret: "SEU_LOJASQUARE_API_SECRET_AQUI"
+# Configurações do bot
+bot:
+  depurar: false
+  token: "TOKEN DO BOT"
+  status_intervalo_segundos: 10
+  status_aleatorio: false
+  status_rotativos:
+    - nome: "Status 01"
+      tipo: "WATCHING"
+    - nome: "Status 02"
+      tipo: "LISTENING"
+    - nome: "Status 03"
+      tipo: "PLAYING"
+    - nome: "Status 04"
+      tipo: "COMPETING"
 
 # Configurações do Banco de Dados
 database:
-  host: "123.456:3306"
-  user: "root"
-  password: "password"
-  name: "lojasquare"
+  depurar: false
+  host: "localhost"
+  porta: 3306
+  usuario: "usuario"
+  senha: "senha"
+  database_nome: "lojasquare"
 
-# Mensagens e Embeds
-mensagens:
-  # Mensagens de notificação de entrega
-  notificacao_entrega:
+# Configurações da API LojaSquare
+lojasquare:
+  depurar: false
+  api_secret: "secret-api-lojasquare"
+  intervalo_de_checagem_segundos: 60
+
+# Configurações de entregas feitas
+entregas_feitas:
+  ativar: true
+  depurar: false
+  usar_sub_servidor: true
+  sub_servidores:
+    - nome: "SERVIDOR"
+      canal: "CANAL-ID"
+    - nome: "SERVIDOR2"
+      canal: "CANAL-ID2"
+  canal_de_entregas_geral: "CANAL-ID-ENTREGAS-GERAL"
+  notificacao:
     titulo_sucesso: "Entrega Realizada com Sucesso!"
-    titulo_multiplas: "Entregas Realizadas com Sucesso!"
+    titulo_multiplas_entregas: "Entregas Realizadas com Sucesso!"
     campos:
       produto:
+        mostrar: true
+        inline: true
         nome: "Produto"
-        inline: true
         desconhecido: "Desconhecido"
-        mostrar: true
       quantidade:
+        mostrar: true
+        inline: true
         nome: "Quantidade"
-        inline: true
         desconhecido: "0"
-        mostrar: true
       player:
+        mostrar: true
+        inline: true
         nome: "Player"
-        inline: true
         desconhecido: "Desconhecido"
-        mostrar: true
       servidor:
+        mostrar: true
+        inline: true
         nome: "Servidor"
-        inline: true
         desconhecido: "Desconhecido"
-        mostrar: true
       subservidor:
+        mostrar: true
+        inline: true
         nome: "SubServidor"
-        inline: true
         desconhecido: "Desconhecido"
-        mostrar: true
       codigo:
+        mostrar: true
+        inline: true
         nome: "Código"
-        inline: true
         desconhecido: "Desconhecido"
-        mostrar: true
       status:
+        mostrar: true
+        inline: true
         nome: "Status"
-        inline: true
         desconhecido: "Desconhecido"
-        mostrar: true
       atualizado_em:
-        nome: "Atualizado Em"
-        inline: true
-        desconhecido: "Desconhecido"
         mostrar: true
-    cor: "Green"
+        inline: true
+        nome: "Atualizado Em"
+        desconhecido: "Desconhecido"
+    cor: "#004D40"
     footer:
-      usar: false
-      texto: "Notificação gerada automaticamente"
-      icone_url: "URL_DO_ICONE_DO_FOOTER"
+      usar: true
+      texto: "lojasquare.com.br"
+      icone_url: "https://imgur.com/5PoEefz.png" # Caso vazio (""), irá usar a imagem do produto, se disponivel
+    imagem:
+      usar: true
+      url: "https://i.imgur.com/TMHNcvD.png" # Caso vazio (""), irá usar a imagem do produto, se disponivel
+
+# Configurações de entregas pendentes
+entregas_pendentes:
+  ativar: true
+  depurar: false
+  usar_sub_servidor: true
+  sub_servidores:
+    - nome: "SERVIDOR"
+      canal: "CANAL-ID"
+    - nome: "SERVIDOR2"
+      canal: "CANAL-ID2"
+  canal_de_entregas_geral: "CANAL-ID-ENTREGAS-GERAL"
+  notificacao:
+    titulo_sucesso: "Entrega Pendente"
+    titulo_multiplas_entregas: "Entregas Pendentes"
+    campos:
+      produto:
+        mostrar: true
+        inline: true
+        nome: "Produto"
+        desconhecido: "Desconhecido"
+      quantidade:
+        mostrar: true
+        inline: true
+        nome: "Quantidade"
+        desconhecido: "0"
+      player:
+        mostrar: true
+        inline: true
+        nome: "Player"
+        desconhecido: "Desconhecido"
+      servidor:
+        mostrar: true
+        inline: true
+        nome: "Servidor"
+        desconhecido: "Desconhecido"
+      subservidor:
+        mostrar: true
+        inline: true
+        nome: "SubServidor"
+        desconhecido: "Desconhecido"
+      codigo:
+        mostrar: true
+        inline: true
+        nome: "Código"
+        desconhecido: "Desconhecido"
+      status:
+        mostrar: true
+        inline: true
+        nome: "Status"
+        desconhecido: "Desconhecido"
+      atualizado_em:
+        mostrar: true
+        inline: true
+        nome: "Atualizado Em"
+        desconhecido: "Desconhecido"
+    cor: "#FFFFFF"
+    footer:
+      usar: true
+      texto: "lojasquare.com.br"
+      icone_url: "https://imgur.com/5PoEefz.png" # Caso vazio (""), irá usar a imagem do produto, se disponivel
+    imagem:
+      usar: true
+      url: "https://i.imgur.com/TMHNcvD.png" # Caso vazio (""), irá usar a imagem do produto, se disponivel

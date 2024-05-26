@@ -1,6 +1,6 @@
 # Bot de Notificação de Entregas
 
-Este projeto é um bot de Discord simplessississsissssssiimo para notificação de entregas realizadas por meio da API LojaSquare. Ele verifica periodicamente novas entregas e envia notificações no canal configurado do Discord.
+Este projeto é um bot de Discord para notificação de entregas realizadas por meio da API LojaSquare. Ele verifica periodicamente novas entregas e envia notificações no canal configurado do Discord.
 
 ## Estrutura do Projeto
 
@@ -11,10 +11,17 @@ Este projeto é um bot de Discord simplessississsissssssiimo para notificação 
   - **db/**: Contém a configuração e a conexão com o banco de dados.
     - `database.ts`
   - **embeds/**: Contém a configuração das mensagens de embed do Discord.
-    - `entregaEmbeds.ts`
+    - `entregaFeitasEmbeds.ts`
+    - `entregaPendentesEmbeds.ts`
   - **services/**: Contém os serviços principais do bot.
     - `entregaService.ts`
-  - `index.ts`: Arquivo principal que inicializa o bot.
+    - `entregasFeitaService.ts`
+    - `entregasPendentesService.ts`
+  - **utils/**: Contém utilitários usados no projeto.
+    - `dataUtil.ts`
+    - `loggerUtil.ts`
+  - **index.ts**: Arquivo principal que inicializa o bot.
+  - **botStatus.ts**: Configuração de status rotativos do bot.
 
 - **config.yml**: Arquivo de configuração que contém todas as variáveis necessárias para o funcionamento do bot.
 
@@ -24,7 +31,7 @@ Este projeto é um bot de Discord simplessississsissssssiimo para notificação 
 
 - Node.js
 - Yarn ou npm
-- MariaDB ou MySQL (Pode ser PHPMYADMIN da vida, normalmente as hospedagens dão de graça.)
+- MariaDB ou MySQL
 
 ### Passos para Configuração
 
@@ -46,98 +53,167 @@ Este projeto é um bot de Discord simplessississsissssssiimo para notificação 
 3. **Configure o arquivo `config.yml`**
 
 Edite o arquivo `config.yml` com suas configurações:
+
 ```yaml
-      # config.yml
+# Configurações do bot
+bot:
+  depurar: false
+  token: "TOKEN DO BOT"
+  status_intervalo_segundos: 10
+  status_aleatorio: false
+  status_rotativos:
+    - nome: "Status 01"
+      tipo: "WATCHING"
+    - nome: "Status 02"
+      tipo: "LISTENING"
+    - nome: "Status 03"
+      tipo: "PLAYING"
+    - nome: "Status 04"
+      tipo: "COMPETING"
 
-   # Configurações do Discord
+# Configurações do Banco de Dados
+database:
+  depurar: false
+  host: "localhost"
+  porta: 3306
+  usuario: "usuario"
+  senha: "senha"
+  database_nome: "lojasquare"
 
-   discord:
-   token: "SEU_DISCORD_TOKEN_AQUI"
-   channel_id: "SEU_DISCORD_CHANNEL_ID_AQUI"
+# Configurações da API LojaSquare
+lojasquare:
+  depurar: false
+  api_secret: "secret-api-lojasquare"
+  intervalo_de_checagem_segundos: 20
 
-   # Configurações da API LojaSquare
+# Configurações de entregas feitas
+entregas_feitas:
+  depurar: false
+  ativar: true
+  usar_sub_servidor: true
+  sub_servidores:
+    - nome: "SERVIDOR"
+      canal: "CANAL-ID"
+    - nome: "SERVIDOR2"
+      canal: "CANAL-ID2"
+  canal_de_entregas_geral: "CANAL-ID-ENTREGAS-GERAL"
+  notificacao:
+    titulo_sucesso: "Entrega Realizada com Sucesso!"
+    titulo_multiplas_entregas: "Entregas Realizadas com Sucesso!"
+    campos:
+      produto:
+        mostrar: true
+        inline: true
+        nome: "Produto"
+        desconhecido: "Desconhecido"
+      quantidade:
+        mostrar: true
+        inline: true
+        nome: "Quantidade"
+        desconhecido: "0"
+      player:
+        mostrar: true
+        inline: true
+        nome: "Player"
+        desconhecido: "Desconhecido"
+      servidor:
+        mostrar: true
+        inline: true
+        nome: "Servidor"
+        desconhecido: "Desconhecido"
+      subservidor:
+        mostrar: true
+        inline: true
+        nome: "SubServidor"
+        desconhecido: "Desconhecido"
+      codigo:
+        mostrar: true
+        inline: true
+        nome: "Código"
+        desconhecido: "Desconhecido"
+      status:
+        mostrar: true
+        inline: true
+        nome: "Status"
+        desconhecido: "Desconhecido"
+      atualizado_em:
+        mostrar: true
+        inline: true
+        nome: "Atualizado Em"
+        desconhecido: "Desconhecido"
+    cor: "#004D40"
+    footer:
+      usar: true
+      texto: "lojasquare.com.br"
+      icone_url: "https://imgur.com/5PoEefz.png"
+    imagem:
+      usar: true
+      url: "https://i.imgur.com/TMHNcvD.png"
 
-   lojasquare:
-   api_secret: "SEU_LOJASQUARE_API_SECRET_AQUI"
-
-   # Configurações do Banco de Dados
-
-   database:
-   host: "SEU_DB_HOST_AQUI"
-   user: "SEU_DB_USER_AQUI"
-   password: "SEU_DB_PASSWORD_AQUI"
-   name: "SEU_DB_DATABASE_AQUI"
-
-   # Mensagens e Embeds
-
-   mensagens: # Mensagens de notificação de entrega
-   notificacao_entrega:
-   titulo_sucesso: "Entrega Realizada com Sucesso!"
-   titulo_multiplas: "Entregas Realizadas com Sucesso!"
-   campos:
-   produto:
-   nome: "Produto"
-   inline: true
-   desconhecido: "Desconhecido"
-   mostrar: true
-   quantidade:
-   nome: "Quantidade"
-   inline: true
-   desconhecido: "0"
-   mostrar: true
-   player:
-   nome: "Player"
-   inline: true
-   desconhecido: "Desconhecido"
-   mostrar: true
-   servidor:
-   nome: "Servidor"
-   inline: true
-   desconhecido: "Desconhecido"
-   mostrar: true
-   subservidor:
-   nome: "SubServidor"
-   inline: true
-   desconhecido: "Desconhecido"
-   mostrar: true
-   codigo:
-   nome: "Código"
-   inline: true
-   desconhecido: "Desconhecido"
-   mostrar: true
-   status:
-   nome: "Status"
-   inline: true
-   desconhecido: "Desconhecido"
-   mostrar: true
-   atualizado_em:
-   nome: "Atualizado Em"
-   inline: true
-   desconhecido: "Desconhecido"
-   mostrar: true
-   cor: "Green"
-   footer:
-   usar: true
-   texto: "Notificação gerada automaticamente"
-   icone_url: "URL_DO_ICONE_DO_FOOTER"
-
-   # Configuração do tempo de busca
-
-   tempo_busca:
-   intervalo_segundos: 60
-
-   ```
-
-   As principais configurações são:
-
-   - **Discord Token**: O token do seu bot do Discord.
-   - **Discord Channel ID**: O ID do canal do Discord onde as notificações serão enviadas.
-   - **LojaSquare API Secret**: A chave secreta da API LojaSquare.
-   - **Banco de Dados**: Configurações do banco de dados (host, usuário, senha, nome).
-   - **Mensagens e Embeds**: Configurações das mensagens de notificação e embeds do Discord.
-   - **Tempo de Busca**: Intervalo de tempo (em segundos) para busca de novas entregas (mínimo de 60 segundos).
-
-   ```
+# Configurações de entregas pendentes
+entregas_pendentes:
+  depurar: false
+  ativar: true
+  usar_sub_servidor: true
+  sub_servidores:
+    - nome: "RANKUP"
+      canal: "1244017763329245185"
+    - nome: "FACTIONS"
+      canal: "1244017795088388156"
+  canal_de_entregas_geral: "1244017779980632176"
+  notificacao:
+    titulo_sucesso: "Entrega Pendente"
+    titulo_multiplas_entregas: "Entregas Pendentes"
+    campos:
+      produto:
+        mostrar: true
+        inline: true
+        nome: "Produto"
+        desconhecido: "Desconhecido"
+      quantidade:
+        mostrar: true
+        inline: true
+        nome: "Quantidade"
+        desconhecido: "0"
+      player:
+        mostrar: true
+        inline: true
+        nome: "Player"
+        desconhecido: "Desconhecido"
+      servidor:
+        mostrar: true
+        inline: true
+        nome: "Servidor"
+        desconhecido: "Desconhecido"
+      subservidor:
+        mostrar: true
+        inline: true
+        nome: "SubServidor"
+        desconhecido: "Desconhecido"
+      codigo:
+        mostrar: true
+        inline: true
+        nome: "Código"
+        desconhecido: "Desconhecido"
+      status:
+        mostrar: true
+        inline: true
+        nome: "Status"
+        desconhecido: "Desconhecido"
+      atualizado_em:
+        mostrar: true
+        inline: true
+        nome: "Atualizado Em"
+        desconhecido: "Desconhecido"
+    cor: "#FFFFFF"
+    footer:
+      usar: true
+      texto: "lojasquare.com.br"
+      icone_url: "https://imgur.com/5PoEefz.png"
+    imagem:
+      usar: true
+      url: "https://i.imgur.com/TMHNcvD.png"
+```
 
 4. **Inicie o Bot**
 

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import yaml from 'yaml';
 import fs from 'fs';
-import { registrarErro } from '../utils/loggerUtil';
+import { registrarErro, registrarLog } from '../utils/loggerUtil';
 
 const config = yaml.parse(fs.readFileSync('config.yml', 'utf8'));
 
@@ -16,6 +16,9 @@ const clienteApi = axios.create({
 clienteApi.interceptors.request.use(request => {
     const urlCompleta = `${request.baseURL}${request.url}`;
     const parametros = request.params ? `?${new URLSearchParams(request.params).toString()}` : '';
+    if (config.lojasquare.depurar) {
+        registrarLog(`Requisição: ${urlCompleta}${parametros}`);
+    }
     return request;
 });
 

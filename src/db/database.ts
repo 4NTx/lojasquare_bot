@@ -1,23 +1,31 @@
 import mariadb from 'mariadb';
 import yaml from 'yaml';
 import fs from 'fs';
-import { registrarErro } from '../utils/loggerUtil';
+import { registrarErro, registrarLog } from '../utils/loggerUtil';
 
 const config = yaml.parse(fs.readFileSync('config.yml', 'utf8'));
 
 const pool = mariadb.createPool({
   host: config.database.host,
-  user: config.database.user,
-  password: config.database.password,
-  connectionLimit: 5,
-  connectTimeout: 10000
+  port: config.database.porta,
+  user: config.database.usuario,
+  password: config.database.senha,
+  connectionLimit: 10,
+  connectTimeout: 30000,
+  acquireTimeout: 30000
 });
 
 const criarBancoDeDados = async () => {
   let conexao;
   try {
+    if (config.database.depurar) {
+      registrarLog('Tentando criar o banco de dados...');
+    }
     conexao = await pool.getConnection();
-    await conexao.query(`CREATE DATABASE IF NOT EXISTS ${config.database.name}`);
+    await conexao.query(`CREATE DATABASE IF NOT EXISTS ${config.database.database_nome}`);
+    if (config.database.depurar) {
+      registrarLog('Banco de dados criado ou já existe.');
+    }
   } catch (erro) {
     registrarErro('Erro ao criar banco de dados', erro);
     throw erro;
@@ -27,13 +35,18 @@ const criarBancoDeDados = async () => {
 };
 
 const configurarPoolComDatabase = async () => {
+  if (config.database.depurar) {
+    registrarLog('Configurando pool com database...');
+  }
   return mariadb.createPool({
     host: config.database.host,
-    user: config.database.user,
-    password: config.database.password,
-    database: config.database.name,
-    connectionLimit: 5,
-    connectTimeout: 10000
+    port: config.database.porta,
+    user: config.database.usuario,
+    password: config.database.senha,
+    database: config.database.database_nome,
+    connectionLimit: 10,
+    connectTimeout: 30000,
+    acquireTimeout: 30000
   });
 };
 
@@ -45,6 +58,9 @@ export const executarQuery = async (sql: string, parametros?: any[]) => {
   }
   let conexao;
   try {
+    if (config.database.depurar) {
+      registrarLog(`Executando query: ${sql}`);
+    }
     conexao = await poolComDatabase.getConnection();
     const resultado = await conexao.query(sql, parametros);
     return resultado;
@@ -70,6 +86,20 @@ export const inicializarBancoDeDados = async () => {
 
     await executarQuery(`
       CREATE TABLE IF NOT EXISTS entregas_enviadas (
+          entregaID INT PRIMARY KEY,
+          produto VARCHAR(255),
+          quantidade INT,
+          player VARCHAR(255),
+          servidor VARCHAR(255),
+          subServidor VARCHAR(255),
+          codigo VARCHAR(255),
+          status VARCHAR(255),
+          atualizadoEm TIMESTAMP
+      );
+    `);
+
+    await executarQuery(`
+      CREATE TABLE IF NOT EXISTS entregas_pendentes (
           entregaID INT PRIMARY KEY,
           produto VARCHAR(255),
           quantidade INT,

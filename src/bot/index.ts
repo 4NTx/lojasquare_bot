@@ -1,18 +1,22 @@
 import { Client, GatewayIntentBits } from 'discord.js';
 import yaml from 'yaml';
 import fs from 'fs';
-import { verificarEntregas } from '../services/entregaService';
+import { verificarEntregasPendentes } from '../services/entregasPendentesService';
 import { registrarLog } from '../utils/loggerUtil';
 import { inicializarBancoDeDados } from '../db/database';
+import { verificarEntregasFeitas } from '../services/entregasFeitasService';
+import { definirStatus } from './botStatus';
 
 const config = yaml.parse(fs.readFileSync('config.yml', 'utf8'));
 
 const cliente = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] });
 
 cliente.once('ready', async () => {
-    registrarLog('Bot está online!');
+    registrarLog('O Bot está online!');
     await inicializarBancoDeDados();
-    verificarEntregas(cliente);
+    verificarEntregasFeitas(cliente);
+    verificarEntregasPendentes(cliente);
+    definirStatus(cliente);
 });
 
-cliente.login(config.discord.token);
+cliente.login(config.bot.token);
