@@ -31,7 +31,7 @@ Este projeto é um bot de Discord para notificação de entregas realizadas por 
 
 - Node.js
 - Yarn ou npm
-- MariaDB ou MySQL
+- MariaDB ou MySQL (PHPMYADMIN SERVE)
 
 ### Passos para Configuração
 
